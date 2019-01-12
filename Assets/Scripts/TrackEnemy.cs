@@ -1,28 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class TrackEnemy : MonoBehaviour
 {
+    [Header("Tower Attributes")]
     public float Range;
-    public string EnemyTag;
 
+    [Header("Shooting Behaviour")]
+    public string EnemyTag;//Game objects to be targetted
+    public Transform CurrentTarget { get; set; }
+    private List<GameObject> enemies;
+
+    [Header("Animation")]
     public Transform TurretJoint;//Where should the turret rotation based on
     public float RotationSpeed;//How fast should the turret rotate
-
-    private Transform currentTarget;
 
     // Start is called before the first frame update
     void Start()
     {
+        enemies = new List<GameObject>();
+        GetComponent<SphereCollider>().radius = Range;
         InvokeRepeating("FindEnemy", 0, 0.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentTarget == null)
+        if (CurrentTarget == null)
         {
             return;
         }
@@ -31,7 +38,7 @@ public class TrackEnemy : MonoBehaviour
         //TurretJoint.LookAt(currentTarget);
 
         //Move 
-        Vector3 direction = currentTarget.position - this.transform.position;
+        Vector3 direction = CurrentTarget.position - this.transform.position;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
 
         //Reduce jerking when switching target by smooting out the rotation over time
@@ -39,6 +46,16 @@ public class TrackEnemy : MonoBehaviour
 
         //Rotate the turret to face the target
         TurretJoint.rotation = Quaternion.Euler(0, rotation.y, 0);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        enemies.Add(other.gameObject);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        enemies.Remove(other.gameObject);
     }
 
     // Additional Scene View overlay when gameObject is selected with gizmos enabled
@@ -50,10 +67,8 @@ public class TrackEnemy : MonoBehaviour
 
     private void FindEnemy()
     {
-        List<GameObject> enemies = new List<GameObject>();
-        enemies.AddRange(GameObject.FindGameObjectsWithTag(EnemyTag));
-        currentTarget = enemies
-            .Where(enemy => Vector3.Distance(enemy.transform.position, this.transform.position) <= Range)
+        enemies.RemoveAll(enemy => enemy == null); //remove all dead / destroyed enemy in range
+        CurrentTarget = enemies
             .OrderBy(enemy => Vector3.Distance(enemy.transform.position, this.transform.position))
             .FirstOrDefault()
             ?.transform;
