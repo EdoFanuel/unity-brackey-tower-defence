@@ -12,7 +12,6 @@ public class TrackEnemy : MonoBehaviour
     [Header("Shooting Behaviour")]
     public string EnemyTag;//Game objects to be targetted
     public Transform CurrentTarget { get; set; }
-    private List<GameObject> enemies;
 
     [Header("Animation")]
     public Transform TurretJoint;//Where should the turret rotation based on
@@ -21,8 +20,6 @@ public class TrackEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        enemies = new List<GameObject>();
-        GetComponent<SphereCollider>().radius = Range;
         InvokeRepeating("FindEnemy", 0, 0.5f);
     }
 
@@ -48,16 +45,6 @@ public class TrackEnemy : MonoBehaviour
         TurretJoint.rotation = Quaternion.Euler(0, rotation.y, 0);
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        enemies.Add(other.gameObject);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        enemies.Remove(other.gameObject);
-    }
-
     // Additional Scene View overlay when gameObject is selected with gizmos enabled
     private void OnDrawGizmosSelected()
     {
@@ -67,8 +54,8 @@ public class TrackEnemy : MonoBehaviour
 
     private void FindEnemy()
     {
-        enemies.RemoveAll(enemy => enemy == null); //remove all dead / destroyed enemy in range
-        CurrentTarget = enemies
+        CurrentTarget = Physics.OverlapSphere(transform.position, Range)
+            .Where(collider => collider.gameObject.tag == "Enemy")
             .OrderBy(enemy => Vector3.Distance(enemy.transform.position, this.transform.position))
             .FirstOrDefault()
             ?.transform;

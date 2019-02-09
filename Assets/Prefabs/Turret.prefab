@@ -200,7 +200,6 @@ GameObject:
   - component: {fileID: 6534284992032512317}
   - component: {fileID: 2640573686339731166}
   - component: {fileID: 66650753648193553}
-  - component: {fileID: 1920821715582539387}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -255,19 +254,6 @@ MonoBehaviour:
   FireRate: 1
   Bullet: {fileID: 846188846425690834, guid: 7cfcc6dcfbefc3e44bc2dd42e1c50c84, type: 3}
   FirePoint: {fileID: 6802146182219903140}
---- !u!135 &1920821715582539387
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6615306145910416892}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 10
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8872903663296805179
 GameObject:
   m_ObjectHideFlags: 0

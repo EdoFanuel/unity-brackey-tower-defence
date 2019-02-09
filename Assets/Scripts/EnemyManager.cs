@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WaveSpawner : MonoBehaviour
+public class EnemyManager : MonoBehaviour
 {
     public Transform Enemy;
     public Transform SpawnPoint;
